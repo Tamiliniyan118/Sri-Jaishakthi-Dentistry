@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, CalendarDays, Clock3, Copy, Sparkles, Search } from "lucide-react";
 import { toast } from "sonner";
 
+import { API_BASE_URL } from "@/lib/api-config";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -79,7 +80,7 @@ function MyAppointmentsPage() {
     setIsTracking(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000"}/appointments`);
+      const response = await fetch(`${API_BASE_URL}/appointments`);
       const data = await response.json().catch(() => []);
 
       if (!response.ok) {

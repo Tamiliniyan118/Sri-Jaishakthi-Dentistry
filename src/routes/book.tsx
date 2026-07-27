@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { ArrowLeft, CalendarIcon, CheckCircle2, Clock, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
+import { API_BASE_URL } from "@/lib/api-config";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -67,7 +68,7 @@ function BookPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000"}/appointments`, {
+      const response = await fetch(`${API_BASE_URL}/appointments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
