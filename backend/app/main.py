@@ -13,13 +13,20 @@ def create_app() -> FastAPI:
     app = FastAPI(title=settings.app_name, version="1.0.0")
 
     app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.cors_origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
     Base.metadata.create_all(bind=engine)
     app.include_router(appointments_router)
+    @app.get("/cors-test")
+    def cors_test():
+        return {
+        "message": "NEW BUILD IS RUNNING",
+        "origins": "*",
+        "credentials": False
+    }
     return app
