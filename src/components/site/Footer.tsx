@@ -41,7 +41,7 @@ export function Footer() {
               <li>76/1, KVK complex,Sri Krishna sweets upstairs, Mettur Road, Erode, Tamil Nadu-638001</li>
               <li>+91 9841425117</li>
               <li>+91 8124186063</li>
-              <li>info@sjsdentalclinic.com</li>
+              <li>srijaishakthi@gmail.com</li>
             </ul>
           </div>
         </div>

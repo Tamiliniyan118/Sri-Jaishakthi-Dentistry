@@ -16,7 +16,7 @@ export function Contact() {
             {[
               { icon: MapPin, label: "Address", value: "76/1, KVK complex,Sri Krishna sweets upstairs, Mettur Road, Erode, Tamil Nadu-638001" },
               { icon: Phone, label: "Phone", value: "+91 9841425117, +91 8124186063" },
-              { icon: Mail, label: "Email", value: "info@sjsdentalclinic.com" },
+              { icon: Mail, label: "Email", value: "srijaishakthi@gmail.com" },
             ].map((c) => (
               <div key={c.label} className="flex items-start gap-4 rounded-3xl bg-card p-5 shadow-soft">
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl gradient-primary text-primary-foreground">
