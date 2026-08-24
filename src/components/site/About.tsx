@@ -1,5 +1,5 @@
 import { Award, Clock, HeartHandshake, ShieldCheck, Sparkles, Users } from "lucide-react";
-import doctorImg from "@/assets/doctor.jpg";
+import doctorImg from "@/assets/doctor.jpeg";
 
 const reasons = [
   { icon: ShieldCheck, title: "Sterile & Safe", desc: "Hospital-grade sterilization on every tool, every time." },
