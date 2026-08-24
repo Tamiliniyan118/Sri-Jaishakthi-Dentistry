@@ -36,8 +36,15 @@ const cases = [
 
 export function Gallery() {
   const [dragPositions, setDragPositions] = useState<Record<string, number>>({});
-  const [draggingCase, setDraggingCase] = useState<string | null>(null);
-  const pointerStartRef = useRef<{ name: string; x: number; y: number } | null>(null);
+  const [activeCase, setActiveCase] = useState<string | null>(null);
+  const pointerRef = useRef<{
+    name: string;
+    pointerId: number;
+    pointerType: string;
+    x: number;
+    y: number;
+    active: boolean;
+  } | null>(null);
 
   const updateDragPosition = (comparison: HTMLDivElement, clientX: number, name: string) => {
     const bounds = comparison.getBoundingClientRect();
@@ -49,27 +56,42 @@ export function Gallery() {
   };
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>, name: string) => {
-    pointerStartRef.current = { name, x: event.clientX, y: event.clientY };
+    pointerRef.current = {
+      name,
+      pointerId: event.pointerId,
+      pointerType: event.pointerType,
+      x: event.clientX,
+      y: event.clientY,
+      active: event.pointerType !== "mouse",
+    };
     event.currentTarget.setPointerCapture(event.pointerId);
+
+    if (event.pointerType !== "mouse") {
+      setActiveCase(name);
+      updateDragPosition(event.currentTarget, event.clientX, name);
+    }
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>, name: string) => {
-    const start = pointerStartRef.current;
-    if (!start || start.name !== name) return;
+    const pointer = pointerRef.current;
+    if (!pointer || pointer.pointerId !== event.pointerId || pointer.name !== name) return;
 
-    if (draggingCase !== name) {
-      const horizontalDistance = Math.abs(event.clientX - start.x);
-      const verticalDistance = Math.abs(event.clientY - start.y);
+    if (!pointer.active) {
+      const horizontalDistance = Math.abs(event.clientX - pointer.x);
+      const verticalDistance = Math.abs(event.clientY - pointer.y);
       if (horizontalDistance <= verticalDistance || horizontalDistance < 4) return;
-      setDraggingCase(name);
+      pointer.active = true;
+      setActiveCase(name);
     }
 
     updateDragPosition(event.currentTarget, event.clientX, name);
   };
 
   const handlePointerEnd = (event: React.PointerEvent<HTMLDivElement>) => {
-    pointerStartRef.current = null;
-    setDraggingCase(null);
+    if (pointerRef.current?.pointerId === event.pointerId) {
+      pointerRef.current = null;
+      setActiveCase(null);
+    }
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
@@ -87,9 +109,7 @@ export function Gallery() {
             Real smiles, <span className="text-gradient">real results</span>
           </h2>
 
-          <p className="mt-4 text-muted-foreground">
-            Hover over a card to reveal the transformation.
-          </p>
+          <p className="mt-4 text-muted-foreground">Hover or drag to reveal the transformation.</p>
         </div>
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -119,11 +139,14 @@ export function Gallery() {
                 {/* AFTER */}
                 <div
                   className={`absolute inset-0 translate-y-full transition-transform duration-500 group-hover:translate-y-0 ${
-                    dragPositions[c.name] !== undefined ? "translate-y-0" : ""
-                  } ${draggingCase === c.name ? "transition-none" : ""}`}
+                    activeCase === c.name ? "transition-none" : ""
+                  }`}
                   style={
-                    dragPositions[c.name] !== undefined
-                      ? { clipPath: `inset(0 0 0 ${dragPositions[c.name]}%)` }
+                    activeCase === c.name
+                      ? {
+                          transform: "translateY(0)",
+                          clipPath: `inset(0 0 0 ${dragPositions[c.name] ?? 0}%)`,
+                        }
                       : undefined
                   }
                 >
